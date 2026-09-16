@@ -46,8 +46,6 @@ jobs:
 
       - name: Build web release
         shell: bash
-        env:
-          API_BASE_URL: ${{ vars.API_BASE_URL }}
         run: |
           REPO_NAME="${GITHUB_REPOSITORY#*/}"
 
@@ -57,9 +55,10 @@ jobs:
             BASE_HREF="/$REPO_NAME/"
           fi
 
-          if [[ -z "$API_BASE_URL" ]]; then
-            echo "::warning::Repository variable API_BASE_URL is empty. The app will use the current origin for API requests."
-          fi
+          API_BASE_URL="https://lokion-fox-flutter-classpractic-06-api-20260916.onrender.com/api"
+
+          echo "BASE_HREF=$BASE_HREF"
+          echo "API_BASE_URL=$API_BASE_URL"
 
           flutter build web --release \
             --base-href "$BASE_HREF" \
