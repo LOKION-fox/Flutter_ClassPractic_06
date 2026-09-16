@@ -7,10 +7,8 @@ import 'models/product_query.dart';
 import 'models/simple_query.dart';
 
 import 'screens/account_screen.dart';
-import 'screens/admin_stats_screen.dart'
-    deferred as admin_stats_screen;
-import 'screens/admin_users_screen.dart'
-    deferred as admin_users_screen;
+import 'screens/admin_stats_screen.dart' deferred as admin_stats_screen;
+import 'screens/admin_users_screen.dart' deferred as admin_users_screen;
 import 'screens/animal_details_screen.dart';
 import 'screens/animal_form_screen.dart';
 import 'screens/animal_list_screen.dart';
@@ -43,9 +41,7 @@ GoRouter buildRouter(
   String? requirePermission(
     AppPermission permission,
   ) {
-    return auth.can(permission)
-        ? null
-        : '/forbidden';
+    return auth.can(permission) ? null : '/forbidden';
   }
 
   int parseId(
@@ -65,28 +61,21 @@ GoRouter buildRouter(
       context,
       state,
     ) {
-      final loggedIn =
-          auth.isAuthenticated;
+      final loggedIn = auth.isAuthenticated;
 
-      final target =
-          state.matchedLocation;
+      final target = state.matchedLocation;
 
-      final public =
-          target == '/login' ||
-          target == '/register';
+      final public = target == '/login' || target == '/register';
 
-      if (!loggedIn &&
-          !public) {
-        final from =
-            Uri.encodeComponent(
+      if (!loggedIn && !public) {
+        final from = Uri.encodeComponent(
           state.uri.toString(),
         );
 
         return '/login?from=$from';
       }
 
-      if (loggedIn &&
-          public) {
+      if (loggedIn && public) {
         return '/';
       }
 
@@ -100,23 +89,18 @@ GoRouter buildRouter(
 
       GoRoute(
         path: '/login',
-
         builder: (
           context,
           state,
         ) {
           return LoginScreen(
-            from:
-                state.uri.queryParameters[
-              'from'
-            ],
+            from: state.uri.queryParameters['from'],
           );
         },
       ),
 
       GoRoute(
         path: '/register',
-
         builder: (
           context,
           state,
@@ -136,13 +120,10 @@ GoRouter buildRouter(
           child,
         ) {
           return AdaptiveAppShell(
-            currentLocation:
-                state.uri.path,
-
+            currentLocation: state.uri.path,
             child: child,
           );
         },
-
         routes: [
           // ==================================================
           // FORBIDDEN
@@ -150,7 +131,6 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/forbidden',
-
             builder: (
               context,
               state,
@@ -165,7 +145,6 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/',
-
             builder: (
               context,
               state,
@@ -180,7 +159,6 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/account',
-
             redirect: (
               context,
               state,
@@ -191,7 +169,6 @@ GoRouter buildRouter(
                   ? null
                   : '/forbidden';
             },
-
             builder: (
               context,
               state,
@@ -206,24 +183,19 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/management',
-
             redirect: (
               context,
               state,
             ) {
-              final allowed =
-                  auth.isUiRole(
+              final allowed = auth.isUiRole(
                     AppRole.manager,
                   ) ||
                   auth.isUiRole(
                     AppRole.admin,
                   );
 
-              return allowed
-                  ? null
-                  : '/forbidden';
+              return allowed ? null : '/forbidden';
             },
-
             builder: (
               context,
               state,
@@ -238,7 +210,6 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/admin/users',
-
             redirect: (
               context,
               state,
@@ -247,22 +218,17 @@ GoRouter buildRouter(
                 AppPermission.manageUsers,
               );
             },
-
             builder: (
               context,
               state,
             ) {
               return DeferredScreen(
-                loadLibrary:
-                    admin_users_screen
-                        .loadLibrary,
-
+                loadLibrary: admin_users_screen.loadLibrary,
                 builder: () {
                   // Важно:
                   // deferred-библиотека
                   // не используется через const.
-                  return admin_users_screen
-                      .AdminUsersScreen();
+                  return admin_users_screen.AdminUsersScreen();
                 },
               );
             },
@@ -274,32 +240,25 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/admin/stats',
-
             redirect: (
               context,
               state,
             ) {
               return requirePermission(
-                AppPermission
-                    .viewStatistics,
+                AppPermission.viewStatistics,
               );
             },
-
             builder: (
               context,
               state,
             ) {
               return DeferredScreen(
-                loadLibrary:
-                    admin_stats_screen
-                        .loadLibrary,
-
+                loadLibrary: admin_stats_screen.loadLibrary,
                 builder: () {
                   // Важно:
                   // deferred-библиотека
                   // не используется через const.
-                  return admin_stats_screen
-                      .AdminStatsScreen();
+                  return admin_stats_screen.AdminStatsScreen();
                 },
               );
             },
@@ -311,7 +270,6 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/products',
-
             builder: (
               context,
               state,
@@ -320,9 +278,7 @@ GoRouter buildRouter(
                 key: ValueKey(
                   state.uri.toString(),
                 ),
-
-                initialQuery:
-                    ProductQuery.fromUri(
+                initialQuery: ProductQuery.fromUri(
                   state.uri,
                 ),
               );
@@ -331,17 +287,14 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/products/new',
-
             redirect: (
               context,
               state,
             ) {
               return requirePermission(
-                AppPermission
-                    .manageCatalog,
+                AppPermission.manageCatalog,
               );
             },
-
             builder: (
               context,
               state,
@@ -351,19 +304,15 @@ GoRouter buildRouter(
           ),
 
           GoRoute(
-            path:
-                '/products/:id/edit',
-
+            path: '/products/:id/edit',
             redirect: (
               context,
               state,
             ) {
               return requirePermission(
-                AppPermission
-                    .manageCatalog,
+                AppPermission.manageCatalog,
               );
             },
-
             builder: (
               context,
               state,
@@ -376,7 +325,6 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/products/:id',
-
             builder: (
               context,
               state,
@@ -393,7 +341,6 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/animals',
-
             builder: (
               context,
               state,
@@ -402,9 +349,7 @@ GoRouter buildRouter(
                 key: ValueKey(
                   state.uri.toString(),
                 ),
-
-                initialQuery:
-                    AnimalQuery.fromUri(
+                initialQuery: AnimalQuery.fromUri(
                   state.uri,
                 ),
               );
@@ -413,17 +358,14 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/animals/new',
-
             redirect: (
               context,
               state,
             ) {
               return requirePermission(
-                AppPermission
-                    .manageCatalog,
+                AppPermission.manageCatalog,
               );
             },
-
             builder: (
               context,
               state,
@@ -433,19 +375,15 @@ GoRouter buildRouter(
           ),
 
           GoRoute(
-            path:
-                '/animals/:id/edit',
-
+            path: '/animals/:id/edit',
             redirect: (
               context,
               state,
             ) {
               return requirePermission(
-                AppPermission
-                    .manageCatalog,
+                AppPermission.manageCatalog,
               );
             },
-
             builder: (
               context,
               state,
@@ -458,7 +396,6 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/animals/:id',
-
             builder: (
               context,
               state,
@@ -475,17 +412,14 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/categories',
-
             redirect: (
               context,
               state,
             ) {
               return requirePermission(
-                AppPermission
-                    .manageReferences,
+                AppPermission.manageReferences,
               );
             },
-
             builder: (
               context,
               state,
@@ -494,13 +428,9 @@ GoRouter buildRouter(
                 key: ValueKey(
                   state.uri.toString(),
                 ),
-
-                initialQuery:
-                    SimpleQuery.fromUri(
+                initialQuery: SimpleQuery.fromUri(
                   state.uri,
-
                   filterParam: 'kind',
-
                   allowedSortFields: {
                     'name',
                     'kind',
@@ -513,17 +443,14 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/categories/new',
-
             redirect: (
               context,
               state,
             ) {
               return requirePermission(
-                AppPermission
-                    .manageReferences,
+                AppPermission.manageReferences,
               );
             },
-
             builder: (
               context,
               state,
@@ -533,19 +460,15 @@ GoRouter buildRouter(
           ),
 
           GoRoute(
-            path:
-                '/categories/:id/edit',
-
+            path: '/categories/:id/edit',
             redirect: (
               context,
               state,
             ) {
               return requirePermission(
-                AppPermission
-                    .manageReferences,
+                AppPermission.manageReferences,
               );
             },
-
             builder: (
               context,
               state,
@@ -558,17 +481,14 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/categories/:id',
-
             redirect: (
               context,
               state,
             ) {
               return requirePermission(
-                AppPermission
-                    .manageReferences,
+                AppPermission.manageReferences,
               );
             },
-
             builder: (
               context,
               state,
@@ -585,17 +505,14 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/suppliers',
-
             redirect: (
               context,
               state,
             ) {
               return requirePermission(
-                AppPermission
-                    .manageReferences,
+                AppPermission.manageReferences,
               );
             },
-
             builder: (
               context,
               state,
@@ -604,14 +521,9 @@ GoRouter buildRouter(
                 key: ValueKey(
                   state.uri.toString(),
                 ),
-
-                initialQuery:
-                    SimpleQuery.fromUri(
+                initialQuery: SimpleQuery.fromUri(
                   state.uri,
-
-                  filterParam:
-                      'country',
-
+                  filterParam: 'country',
                   allowedSortFields: {
                     'name',
                     'country',
@@ -624,17 +536,14 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/suppliers/new',
-
             redirect: (
               context,
               state,
             ) {
               return requirePermission(
-                AppPermission
-                    .manageReferences,
+                AppPermission.manageReferences,
               );
             },
-
             builder: (
               context,
               state,
@@ -644,19 +553,15 @@ GoRouter buildRouter(
           ),
 
           GoRoute(
-            path:
-                '/suppliers/:id/edit',
-
+            path: '/suppliers/:id/edit',
             redirect: (
               context,
               state,
             ) {
               return requirePermission(
-                AppPermission
-                    .manageReferences,
+                AppPermission.manageReferences,
               );
             },
-
             builder: (
               context,
               state,
@@ -669,17 +574,14 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/suppliers/:id',
-
             redirect: (
               context,
               state,
             ) {
               return requirePermission(
-                AppPermission
-                    .manageReferences,
+                AppPermission.manageReferences,
               );
             },
-
             builder: (
               context,
               state,
@@ -696,17 +598,14 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/customers',
-
             redirect: (
               context,
               state,
             ) {
               return requirePermission(
-                AppPermission
-                    .manageCustomers,
+                AppPermission.manageCustomers,
               );
             },
-
             builder: (
               context,
               state,
@@ -715,21 +614,15 @@ GoRouter buildRouter(
                 key: ValueKey(
                   state.uri.toString(),
                 ),
-
-                initialQuery:
-                    SimpleQuery.fromUri(
+                initialQuery: SimpleQuery.fromUri(
                   state.uri,
-
                   filterParam: 'level',
-
                   allowedSortFields: {
                     'lastName',
                     'email',
                     'points',
                   },
-
-                  defaultSort:
-                      'lastName',
+                  defaultSort: 'lastName',
                 ),
               );
             },
@@ -737,17 +630,14 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/customers/new',
-
             redirect: (
               context,
               state,
             ) {
               return requirePermission(
-                AppPermission
-                    .manageCustomers,
+                AppPermission.manageCustomers,
               );
             },
-
             builder: (
               context,
               state,
@@ -757,19 +647,15 @@ GoRouter buildRouter(
           ),
 
           GoRoute(
-            path:
-                '/customers/:id/edit',
-
+            path: '/customers/:id/edit',
             redirect: (
               context,
               state,
             ) {
               return requirePermission(
-                AppPermission
-                    .manageCustomers,
+                AppPermission.manageCustomers,
               );
             },
-
             builder: (
               context,
               state,
@@ -782,17 +668,14 @@ GoRouter buildRouter(
 
           GoRoute(
             path: '/customers/:id',
-
             redirect: (
               context,
               state,
             ) {
               return requirePermission(
-                AppPermission
-                    .manageCustomers,
+                AppPermission.manageCustomers,
               );
             },
-
             builder: (
               context,
               state,
@@ -820,40 +703,30 @@ GoRouter buildRouter(
             'Ошибка 404',
           ),
         ),
-
         body: Center(
           child: Padding(
-            padding:
-                const EdgeInsets.all(
+            padding: const EdgeInsets.all(
               24,
             ),
-
             child: Column(
-              mainAxisSize:
-                  MainAxisSize.min,
-
+              mainAxisSize: MainAxisSize.min,
               children: [
                 const Text(
                   '404',
-
                   style: TextStyle(
                     fontSize: 60,
                   ),
                 ),
-
                 const Text(
                   'Страница не найдена',
                 ),
-
                 const SizedBox(
                   height: 20,
                 ),
-
                 FilledButton(
                   onPressed: () {
                     context.go('/');
                   },
-
                   child: const Text(
                     'На главную',
                   ),
