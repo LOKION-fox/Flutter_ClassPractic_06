@@ -72,19 +72,23 @@ class _AnimalFormScreenState extends State<AnimalFormScreen> {
   }
 
   Future<void> _load() async {
-    try {
-      final categories =
-          await context.read<CategoryListNotifier>().getAllActive();
+    final categoryNotifier = context.read<CategoryListNotifier>();
 
-      final suppliers =
-          await context.read<SupplierListNotifier>().getAllActive();
+    final supplierNotifier = context.read<SupplierListNotifier>();
+
+    final animalNotifier = context.read<AnimalListNotifier>();
+
+    try {
+      final categories = await categoryNotifier.getAllActive();
+
+      final suppliers = await supplierNotifier.getAllActive();
 
       Animal? animal;
 
       if (widget.id != null) {
-        animal = await context.read<AnimalListNotifier>().findById(
-              widget.id!,
-            );
+        animal = await animalNotifier.findById(
+          widget.id!,
+        );
       }
 
       if (!mounted) {

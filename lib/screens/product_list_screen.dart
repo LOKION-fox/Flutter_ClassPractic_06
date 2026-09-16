@@ -42,16 +42,20 @@ class _ProductListScreenState extends State<ProductListScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
-        await context.read<ProductListNotifier>().applyQuery(
-              widget.initialQuery,
-            );
+        final productNotifier = context.read<ProductListNotifier>();
+
+        final categoryNotifier = context.read<CategoryListNotifier>();
+
+        final supplierNotifier = context.read<SupplierListNotifier>();
+
+        await productNotifier.applyQuery(
+          widget.initialQuery,
+        );
 
         try {
-          final categories =
-              await context.read<CategoryListNotifier>().getAllActive();
+          final categories = await categoryNotifier.getAllActive();
 
-          final suppliers =
-              await context.read<SupplierListNotifier>().getAllActive();
+          final suppliers = await supplierNotifier.getAllActive();
 
           if (!mounted) {
             return;

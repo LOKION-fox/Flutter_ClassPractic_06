@@ -130,7 +130,7 @@ class _EntityFormScaffoldState extends State<EntityFormScaffold> {
 
         final allow = await _canLeave();
 
-        if (!allow || !mounted) {
+        if (!allow || !context.mounted) {
           return;
         }
 

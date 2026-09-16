@@ -22,11 +22,17 @@ class ProductDetailsScreen extends StatelessWidget {
   Future<List<Object?>> _load(
     BuildContext context,
   ) async {
-    final product = await context.read<ProductListNotifier>().findById(id);
+    final productNotifier = context.read<ProductListNotifier>();
 
-    final categories = await context.read<CategoryListNotifier>().getAll();
+    final categoryNotifier = context.read<CategoryListNotifier>();
 
-    final suppliers = await context.read<SupplierListNotifier>().getAll();
+    final supplierNotifier = context.read<SupplierListNotifier>();
+
+    final product = await productNotifier.findById(id);
+
+    final categories = await categoryNotifier.getAll();
+
+    final suppliers = await supplierNotifier.getAll();
 
     return [
       product,

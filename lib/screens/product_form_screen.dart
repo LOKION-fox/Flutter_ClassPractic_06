@@ -71,19 +71,23 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   }
 
   Future<void> _load() async {
-    try {
-      final categories =
-          await context.read<CategoryListNotifier>().getAllActive();
+    final categoryNotifier = context.read<CategoryListNotifier>();
 
-      final suppliers =
-          await context.read<SupplierListNotifier>().getAllActive();
+    final supplierNotifier = context.read<SupplierListNotifier>();
+
+    final productNotifier = context.read<ProductListNotifier>();
+
+    try {
+      final categories = await categoryNotifier.getAllActive();
+
+      final suppliers = await supplierNotifier.getAllActive();
 
       Product? product;
 
       if (widget.id != null) {
-        product = await context.read<ProductListNotifier>().findById(
-              widget.id!,
-            );
+        product = await productNotifier.findById(
+          widget.id!,
+        );
       }
 
       if (!mounted) {

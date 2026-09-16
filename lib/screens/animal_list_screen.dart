@@ -39,13 +39,16 @@ class _AnimalListScreenState extends State<AnimalListScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
-        await context.read<AnimalListNotifier>().applyQuery(
-              widget.initialQuery,
-            );
+        final animalNotifier = context.read<AnimalListNotifier>();
+
+        final supplierNotifier = context.read<SupplierListNotifier>();
+
+        await animalNotifier.applyQuery(
+          widget.initialQuery,
+        );
 
         try {
-          final suppliers =
-              await context.read<SupplierListNotifier>().getAllActive();
+          final suppliers = await supplierNotifier.getAllActive();
 
           if (!mounted) {
             return;

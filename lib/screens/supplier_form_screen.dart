@@ -57,16 +57,19 @@ class _SupplierFormScreenState extends State<SupplierFormScreen> {
   }
 
   Future<void> _load() async {
+    final categoryNotifier = context.read<CategoryListNotifier>();
+
+    final supplierNotifier = context.read<SupplierListNotifier>();
+
     try {
-      final categories =
-          await context.read<CategoryListNotifier>().getAllActive();
+      final categories = await categoryNotifier.getAllActive();
 
       Supplier? supplier;
 
       if (widget.id != null) {
-        supplier = await context.read<SupplierListNotifier>().findById(
-              widget.id!,
-            );
+        supplier = await supplierNotifier.findById(
+          widget.id!,
+        );
       }
 
       if (!mounted) {
