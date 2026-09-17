@@ -55,7 +55,7 @@ jobs:
             BASE_HREF="/$REPO_NAME/"
           fi
 
-          API_BASE_URL="https://lokion-fox-flutter-classpractic-06-api-20260916.onrender.com/api"
+          API_BASE_URL="https://lokion-fox-flutter-classpractic-06-api.onrender.com/api"
 
           echo "BASE_HREF=$BASE_HREF"
           echo "API_BASE_URL=$API_BASE_URL"
